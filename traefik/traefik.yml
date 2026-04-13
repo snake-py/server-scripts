@@ -25,7 +25,8 @@ certificatesResolvers:
         # netcup alternative — comment out godaddy above and uncomment:
         # provider: netcup
         # Delay between DNS propagation check retries (seconds)
-        delayBeforeCheck: 30
+        propagation:
+          delayBeforeChecks: 30
 
 providers:
   docker:

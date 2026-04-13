@@ -7,6 +7,7 @@ services:
       - "80:80"
       - "443:443"
     environment:
+      - DOCKER_API_VERSION=1.45
       - GODADDY_API_KEY=${GODADDY_API_KEY}
       - GODADDY_API_SECRET=${GODADDY_API_SECRET}
       # netcup alternative — uncomment if using netcup instead of GoDaddy:
