@@ -1,0 +1,40 @@
+api:
+  dashboard: true
+
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+          permanent: true
+  websecure:
+    address: ":443"
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      # Replace with your email for Let's Encrypt notifications
+      email: "fabio.batti93@gmail.com"
+      storage: /acme.json
+      dnsChallenge:
+        # GoDaddy provider — uses GODADDY_API_KEY and GODADDY_API_SECRET env vars
+        provider: godaddy
+        # netcup alternative — comment out godaddy above and uncomment:
+        # provider: netcup
+        # Delay between DNS propagation check retries (seconds)
+        delayBeforeCheck: 30
+
+providers:
+  docker:
+    network: proxy
+    exposedByDefault: false
+  file:
+    # Watch this config file for changes without restarting
+    filename: /etc/traefik/traefik.yml
+    watch: true
+
+log:
+  level: INFO

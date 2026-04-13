@@ -1,0 +1,28 @@
+services:
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: mailpit
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      # Relay outbound mail through an external SMTP provider (e.g. Brevo, Mailgun)
+      # Remove or comment out MP_SMTP_RELAY_* to catch-only mode (no real delivery)
+      MP_SMTP_RELAY_HOST: ${RELAY_HOST}
+      MP_SMTP_RELAY_PORT: ${RELAY_PORT}
+      MP_SMTP_RELAY_AUTH: login
+      MP_SMTP_RELAY_USERNAME: ${RELAY_USERNAME}
+      MP_SMTP_RELAY_PASSWORD: ${RELAY_PASSWORD}
+      # Sender address used when relaying (should match your provider's verified sender)
+      MP_SMTP_RELAY_RETURN_PATH: ${RELAY_FROM}
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mailpit.rule=Host(`mail.${DOMAIN}`)"
+      - "traefik.http.routers.mailpit.entrypoints=websecure"
+      - "traefik.http.routers.mailpit.tls.certresolver=letsencrypt"
+      - "traefik.http.services.mailpit.loadbalancer.server.port=8025"
+
+networks:
+  proxy:
+    external: true
