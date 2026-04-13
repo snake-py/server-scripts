@@ -22,4 +22,5 @@ volumes:
 
 networks:
   proxy:
+    name: traefik-tailnet01
     external: true  # Created by the traefik compose — start traefik first

@@ -25,4 +25,5 @@ services:
 
 networks:
   proxy:
+    name: traefik-tailnet01
     external: true

@@ -29,7 +29,7 @@ certificatesResolvers:
 
 providers:
   docker:
-    network: proxy
+    network: traefik-tailnet01
     exposedByDefault: false
   file:
     # Watch this config file for changes without restarting
