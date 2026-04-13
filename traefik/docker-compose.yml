@@ -33,5 +33,5 @@ services:
 
 networks:
   proxy:
-    name: traefik-tailnet01
+    name: traefik-main
     driver: bridge
