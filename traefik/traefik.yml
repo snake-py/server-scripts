@@ -30,6 +30,7 @@ certificatesResolvers:
 
 providers:
   docker:
+    endpoint: "tcp://socket-proxy:2375"
     network: traefik-main
     exposedByDefault: false
   file:
