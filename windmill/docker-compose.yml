@@ -25,7 +25,7 @@ services:
         condition: service_healthy
     env_file: .env
     environment:
-      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db/windmill?sslmode=disable
       - MODE=server
       - LSP_URL=http://windmill-lsp:3001
       - BASE_URL=https://windmill.${DOMAIN}
@@ -47,7 +47,7 @@ services:
       - windmill_server
     env_file: .env
     environment:
-      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db/windmill?sslmode=disable
       - MODE=worker
       - WORKER_GROUP=default
     volumes:
