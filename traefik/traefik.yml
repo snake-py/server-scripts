@@ -26,7 +26,7 @@ certificatesResolvers:
         # provider: netcup
         # Delay between DNS propagation check retries (seconds)
         propagation:
-          delayBeforeChecks: 30
+          delayBeforeChecks: 60
 
 providers:
   docker:

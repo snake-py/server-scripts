@@ -1,0 +1,77 @@
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: windmill-db
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      POSTGRES_DB: windmill
+    volumes:
+      - windmill_db:/var/lib/postgresql/data
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d windmill"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  windmill_server:
+    image: ghcr.io/windmill-labs/windmill:main
+    container_name: windmill-server
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file: .env
+    environment:
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db/windmill?sslmode=disable
+      - MODE=server
+      - LSP_URL=http://windmill-lsp:3001
+      - BASE_URL=https://windmill.${DOMAIN}
+    networks:
+      - internal
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.windmill.rule=Host(`windmill.${DOMAIN}`)"
+      - "traefik.http.routers.windmill.entrypoints=websecure"
+      - "traefik.http.routers.windmill.tls.certresolver=letsencrypt"
+      - "traefik.http.services.windmill.loadbalancer.server.port=8000"
+
+  windmill_worker:
+    image: ghcr.io/windmill-labs/windmill:main
+    container_name: windmill-worker
+    restart: unless-stopped
+    depends_on:
+      - windmill_server
+    env_file: .env
+    environment:
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db/windmill?sslmode=disable
+      - MODE=worker
+      - WORKER_GROUP=default
+    volumes:
+      - windmill_worker_cache:/tmp/windmill/cache
+    networks:
+      - internal
+
+  lsp:
+    image: ghcr.io/windmill-labs/windmill-lsp:latest
+    container_name: windmill-lsp
+    restart: unless-stopped
+    networks:
+      - internal
+
+volumes:
+  windmill_db:
+    name: windmill_db
+  windmill_worker_cache:
+    name: windmill_worker_cache
+
+networks:
+  proxy:
+    name: traefik-main
+    external: true  # Created by the traefik compose — start traefik first
+  internal:
+    name: windmill-internal
+    driver: bridge
