@@ -12,6 +12,13 @@ entryPoints:
           permanent: true
   websecure:
     address: ":443"
+    http:
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: "${DOMAIN}"
+            sans:
+              - "*.${DOMAIN}"
 
 certificatesResolvers:
   letsencrypt:
