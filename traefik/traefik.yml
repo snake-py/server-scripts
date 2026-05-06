@@ -16,9 +16,9 @@ entryPoints:
       tls:
         certResolver: letsencrypt
         domains:
-          - main: "${DOMAIN}"
+          - main: "$DOMAIN"
             sans:
-              - "*.${DOMAIN}"
+              - "*.$DOMAIN"
 
 certificatesResolvers:
   letsencrypt:

@@ -26,6 +26,7 @@ services:
     environment:
       - GODADDY_API_KEY=${GODADDY_API_KEY}
       - GODADDY_API_SECRET=${GODADDY_API_SECRET}
+      - DOMAIN=${DOMAIN}
       # netcup alternative — uncomment if using netcup instead of GoDaddy:
       # - NETCUP_RELAY_HOST=${NETCUP_CUSTOMER_NUMBER}
       # - NETCUP_API_KEY=${NETCUP_API_KEY}
